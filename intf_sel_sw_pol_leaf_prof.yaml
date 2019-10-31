@@ -1,0 +1,63 @@
+---
+- name: ACI REST for associating interface to port policy
+  hosts: ansible
+  gather_facts: NO 
+
+  tasks:
+  - name: Associating interface to port policy
+    aci_rest:
+      host: '10.4.255.5'
+      username: admin
+      password: 'C1sc0123'
+      method: post
+      validate_certs: no
+      path: /api/node/mo/uni/infra/accportprof-Leaf-501-interface-5.json
+      content:
+        {
+          "infraAccPortP": {
+            "attributes": {
+              "dn": "uni/infra/accportprof-Leaf-501-interface-5",
+              "name": "Leaf-501-interface-5",
+              "rn": "accportprof-Leaf-501-interface-5",
+              "status": "created,modified"
+            },
+            "children": [
+              {
+                "infraHPortS": {
+                  "attributes": {
+                    "dn": "uni/infra/accportprof-Leaf-501-interface-5/hports-AccessPort-1-5-typ-range",
+                    "name": "AccessPort-1-5",
+                    "rn": "hports-AccessPort-1-5-typ-range",
+                    "status": "created,modified"
+                  },
+                  "children": [
+                    {
+                      "infraPortBlk": {
+                        "attributes": {
+                          "dn": "uni/infra/accportprof-Leaf-501-interface-5/hports-AccessPort-1-5-typ-range/portblk-block2",
+                          "fromPort": "5",
+                          "toPort": "5",
+                          "name": "block2",
+                          "rn": "portblk-block2",
+                          "status": "created,modified"
+                        },
+                        "children": []
+                      }
+                    },
+                    {
+                      "infraRsAccBaseGrp": {
+                        "attributes": {
+                          "tDn": "uni/infra/funcprof/accportgrp-leaf-access-pol-1-5",
+                          "status": "created,modified"
+                        },
+                        "children": []
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }        
+    delegate_to: localhost
+    register: result 
