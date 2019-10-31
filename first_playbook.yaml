@@ -1,6 +1,6 @@
 ---
 - name: AWX first YAML
-  hosts: ansible
+  hosts: ansible_apic
   gather_facts: FALSE
 
   tasks:
@@ -15,7 +15,7 @@
 #    register: all_tenants
   - name: Add a new leaf_interface_profile
     aci_interface_policy_leaf_profile:
-      host: '10.4.255.5'
+      host: "{{ ansible_apic }}"
       username: admin
       password: 'C1sc0123'
       leaf_interface_profile: Leaf-501-Interface-5
