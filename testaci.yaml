@@ -5,8 +5,8 @@
   vars:
     api_info: &api_info
       host: '{{ apic_host }}'
-      username: admin
-      password: 'C1sc0123'
+      username: '{{ apic_username }}'
+      password: '{{ apic_password }}'
   tasks:
   - name: query all tenants
     aci_tenant:
