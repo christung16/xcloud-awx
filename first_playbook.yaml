@@ -1,8 +1,12 @@
 ---
 - name: AWX first YAML
-  hosts: ansible_apic
+  hosts: localhost
   gather_facts: FALSE
-
+  vars:
+    api_info: &api_info
+      host: '10.4.255.5'
+      username: admin
+      password: 'C1sc0123'
   tasks:
 #  - name: query all tenants
 #    aci_tenant:
@@ -15,25 +19,26 @@
 #    register: all_tenants
   - name: Add a new leaf_interface_profile
     aci_interface_policy_leaf_profile:
-      host: "{{ ansible_apic }}"
-      username: admin
-      password: 'C1sc0123'
-      leaf_interface_profile: Leaf-501-Interface-5
-      description:  description of Leaf-501-Interface-5
+#      host: '10.4.255.5'
+#      username: admin
+#      password: 'C1sc0123'
+      <<: *api_info
+      leaf_interface_profile: Leaf-501-Interface-7
+      description:  description of Leaf-501-Interface-7
       state: present
       validate_certs: no
-    delegate_to: localhost
+#    delegate_to: localhost
 
-  - name: Query all access port blocks under given leaf interface profile
-    aci_access_port_block_to_access_port:
-      host: '10.4.255.5'
-      username: admin
-      password: 'C1sc0123'
-      leaf_interface_profile: Leaf-501-Interface-5
-      state: query
-      validate_certs: no
-    delegate_to: localhost
-    register: query_result
+#  - name: Query all access port blocks under given leaf interface profile
+#    aci_access_port_block_to_access_port:
+#      host: '10.4.255.5'
+#      username: admin
+#      password: 'C1sc0123'
+#      leaf_interface_profile: Leaf-501-Interface-5
+#      state: query
+#      validate_certs: no
+#    delegate_to: localhost
+#    register: query_result
 
 #  - name: Associate an access port block (single port) to an interface selector
 #    aci_access_port_block_to_access_port:
@@ -42,7 +47,7 @@
 #      password: 'C1sc0123'
 #      leaf_interface_profile: Leaf-501-interface-5
 #      access_port_selector: AccessPort-1-5
-#      leaf_port_blk: block2
+#      leaf_port_blk: Block
 #      from_port: 5
 #      to_port: 5
 #      state: present
@@ -51,17 +56,32 @@
 
   - name: Associate an Interface Access Port Selector to an Interface Policy Leaf Profile with a Policy Group
     aci_access_port_to_interface_policy_leaf_profile:
-      host: '10.4.255.5'
+      host: 10.4.255.5
       username: admin
-      password: 'C1sc0123'
-      leaf_interface_profile: 'Leaf-501-interface-5'
-      access_port_selector: 'AccessPort-1-5'
-      leaf_port_blk: 'block2'
-      from_port: '5'
-      to_port: '5'
-      policy_group: 'leaf-access-pol-1-5'
+      password: C1sc0123
+      leaf_interface_profile: Leaf-501-Interface-7
+      access_port_selector: AccessPort-1-7
+      leaf_port_blk: Block
+      #      leaf_port_blk_description: ""
+      from_port: 7
+      to_port: 7
+      policy_group: leaf-access-pol-1-7
+      validate_certs: false
       state: present
-      validate_certs: no
-    delegate_to: localhost
+#    delegate_to: localhost
 
+  - name: Associate an Interface Access Port Selector to an Interface Policy Leaf Profile with a Policy Group
+    aci_access_port_to_interface_policy_leaf_profile:
+      host: 10.4.255.5
+      username: admin
+      password: C1sc0123
+      leaf_interface_profile: Leaf-501-Interface-7
+      access_port_selector: AccessPort-1-7
+      leaf_port_blk: Block
+      leaf_port_blk_description: TestingTesting2222
+      from_port: 7
+      to_port: 7
+      policy_group: leaf-access-pol-1-7
+      validate_certs: false
+      state: present
 

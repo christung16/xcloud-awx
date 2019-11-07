@@ -1,0 +1,37 @@
+---
+- name: AWX first YAML
+  hosts: localhost
+  gather_facts: FALSE
+  vars:
+    api_info: &api_info
+      host: '10.4.255.5'
+      username: admin
+      password: 'C1sc0123'
+      validate_certs: no
+  tasks:
+  - name: Add a new leaf_interface_profile
+    aci_interface_policy_leaf_profile:
+      <<: *api_info
+      leaf_interface_profile: Leaf-501-Interface-8
+      description:  description of Leaf-501-Interface-8
+      state: present
+
+  - name: Associate an access port block (single port) to an interface selector
+    aci_access_port_block_to_access_port:
+      <<: *api_info
+      leaf_interface_profile: Leaf-501-Interface-8
+      access_port_selector: AccessPort-1-8
+      leaf_port_blk: block2
+      from_port: 8
+      to_port: 8
+      state: present
+
+  - name: Associate an Interface Access Port Selector to an Interface Policy Leaf Profile with a Policy Group
+    aci_access_port_to_interface_policy_leaf_profile:
+      <<: *api_info
+      leaf_interface_profile: Leaf-501-Interface-8
+      access_port_selector: AccessPort-1-8
+      policy_group: leaf-access-pol-1-6
+      state: present
+
+
