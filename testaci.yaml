@@ -4,7 +4,7 @@
   gather_facts: FALSE
   vars:
     api_info: &api_info
-      host: '10.4.255.5'
+      host: '{{ apic_host }}'
       username: admin
       password: 'C1sc0123'
   tasks:
