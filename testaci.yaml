@@ -1,31 +1,20 @@
 ---
 - name: AWX first YAML
   hosts: localhost
-  gather_facts: no
-  tasks:
-
-  - name: Add a new leaf_interface_profile
-    aci_interface_policy_leaf_profile:
+  gather_facts: FALSE
+  vars:
+    api_info: &api_info
       host: '10.4.255.5'
       username: admin
       password: 'C1sc0123'
-      leaf_interface_profile: Leaf-501-Interface-7
-      description:  description of Leaf-501-Interface-7
-      state: present
+  tasks:
+  - name: query all tenants
+    aci_tenant:
+      <<: *api_info
+      state: query
       validate_certs: no
-
-  - name: Associate an Interface Access Port Selector to an Interface Policy Leaf Profile with a Policy Group
-    aci_access_port_to_interface_policy_leaf_profile:
-      host: 10.4.255.5
-      username: admin
-      password: C1sc0123
-      leaf_interface_profile: Leaf-501-Interface-7
-      access_port_selector: AccessPort-1-7
-      leaf_port_blk: block2
-      from_port: 7
-      to_port: 7
-      policy_group: leaf-access-pol-1-6
-      validate_certs: false
-      state: present
-
-
+    delegate_to: localhost
+    register: all_tenants
+  - name: debug register
+    debug:
+      msg: "{{ all_tenants }}"
